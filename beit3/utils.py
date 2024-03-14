@@ -542,6 +542,8 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
             print(f"Removing key {k} from pretrained checkpoint")
             del checkpoint_model[k]
 
+    for k, v in checkpoint_model.items():
+        checkpoint_model[k] = v.float()
     # interpolate position embedding
     for pos_embed_key in ("vision_pos_embed", "pos_embed", "beit3.encoder.embed_positions.A.weight"):
         if pos_embed_key in checkpoint_model:
