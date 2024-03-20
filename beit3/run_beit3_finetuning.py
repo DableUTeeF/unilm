@@ -4,7 +4,8 @@
 # Copyright (c) 2023 Microsoft
 # Licensed under The MIT License [see LICENSE for details]
 # --------------------------------------------------------'
-
+import warnings
+warnings.filterwarnings('ignore')
 import argparse
 import datetime
 import numpy as np
@@ -215,7 +216,7 @@ def get_args():
 
 
 def main(args, ds_init):
-    utils.init_distributed_mode(args)
+    # utils.init_distributed_mode(args)
 
     if ds_init is not None:
         utils.create_ds_config(args)
@@ -306,6 +307,7 @@ def main(args, ds_init):
 
     skip_weight_decay_list = model.no_weight_decay()
 
+    args.distributed = False
     if args.distributed:
         torch.distributed.barrier()
     if args.enable_deepspeed:

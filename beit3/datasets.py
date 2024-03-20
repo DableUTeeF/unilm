@@ -581,16 +581,28 @@ class RetrievalDataset(torch.utils.data.Dataset):  # todo: change here
         self.eos_token_id = self.tokenizer.eos_token_id
         self.pad_token_id = self.tokenizer.pad_token_id
         self.num_max_bpe_tokens = kwargs.get('num_max_bpe_tokens', None)
-        self.data_path = '/home/palm/data/sme_imagesearch/SMEdata_25classes'
+        self.data_path = 'ssh://lanta-aimedi/project/lt200203-aimedi/SMEdata/set_json2gb/GroupClass'
         # csv = pd.read_csv('/home/palm/data/sme_imagesearch/SMEdata_25classes/UNSPSC_25Class_51300_text_commodity_TH.csv')
         data = {'image': [], 'text': []}
-        for line in open('/home/palm/data/sme_imagesearch/SMEdata_25classes/map_szM_trainingSet25cls.txt').read().split('\n'):
-            if len(line) == 0:
-                continue
-            path, _, text = line.split('||')
-            path = path.split('\\')
-            data['image'].append(os.path.join(path[-2], path[-1]))
-            data['text'].append(text)
+        # for line in open('/project/lt200203-aimedi/palm/unilm/beit3/map_szM_trainingSet25cls.txt').read().split('\n'):
+        #     if len(line) == 0:
+        #         continue
+        #     path, _, text = line.split('||')
+        #     path = path.split('\\')
+        #     data['image'].append(os.path.join(path[-2], path[-1]))
+        #     data['text'].append(text)
+        for file in [
+            '/project/lt200203-aimedi/SMEdata/set_json2gb/GroupClass/info/SMEdata/set_json2gb/GroupClass/info/map_szM_concatenated_data.txt', 
+            '/project/lt200203-aimedi/SMEdata/set_json2gb/GroupClass/info/SMEdata/set_json2gb/GroupClass/info/map_szS_concatenated_data.txt', 
+            '/project/lt200203-aimedi/SMEdata/set_json2gb/GroupClass/info/SMEdata/set_json2gb/GroupClass/info/map_szXL_concatenated_data.txt'
+        ]:
+            for line in open(file).read().split('\n'):
+                if len(line) == 0:
+                    continue
+                path, _, text = line.split('||')
+                path = path.split('\\')
+                data['image'].append(os.path.join(path[-3], path[-2], path[-1]))
+                data['text'].append(text)
 
         train_df, test_df = train_test_split(
             pd.DataFrame(data),
